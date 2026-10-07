@@ -1,0 +1,8 @@
+# 1. Install dependencies across all workspaces
+npm install
+
+# 2. Run both client and server concurrently
+npm run dev
+
+# 3. Run E2E accessibility test suite
+npm run test:e2e

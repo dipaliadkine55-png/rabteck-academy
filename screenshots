@@ -1,0 +1,28 @@
+# Audit Screenshots
+
+## Purpose
+This directory stores visual evidence from:
+- Lighthouse accessibility audits
+- Keyboard-only navigation passes
+- Architecture verification (monorepo skeleton, README boundaries)
+
+## Structure
+docs/audit/screenshots/
+├── lighthouse-report.png
+├── keyboard-navigation.gif
+├── missing-alt.png
+├── contrast-fail.png
+├── no-skip-link.png
+├── heading-issues.png
+├── aria-misuse.png
+
+## Usage
+- Reference each screenshot in `audit-worksheet.md` under **Screenshot/Report Reference**.
+- Keep filenames descriptive and consistent with the issue documented.
+- Store raw Lighthouse JSON/HTML reports separately in `docs/audit/reports/`.
+
+## Submission
+Include this folder in your GitHub repository so reviewers can verify:
+- Accessibility issues flagged
+- Keyboard navigation behavior
+- Architecture compliance

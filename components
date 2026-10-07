@@ -1,0 +1,9 @@
+repo-root/
+├── client/        # React frontend (Button, Input, Dialog)
+│   └── package.json
+├── server/        # Node/Express backend
+│   └── package.json
+├── docs/          # Audit reports, worksheet, screenshots
+├── tests/         # Jest/Playwright tests
+├── package.json   # Root workspace config
+└── .github/workflows/e2e.yml

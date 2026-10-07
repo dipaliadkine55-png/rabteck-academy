@@ -1,0 +1,7 @@
+repo-root/
+├── client/        # Frontend (React/Next.js)
+├── server/        # Backend (Node/Express)
+├── docs/          # Audit reports, architecture notes
+├── tests/         # Unit & integration tests
+├── .github/workflows/e2e.yml  # CI/CD pipeline
+└── README.md      # Architecture overview
