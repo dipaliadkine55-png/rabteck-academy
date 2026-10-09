@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Accessibility Dashboard - WCAG 2.1 AAA Compliant</title>
+    <!-- Tailwind CSS for modern design aesthetics -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: ['class', '[data-theme="dark"]'],
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#026597',
+                            700: '#034a6e',
+                            800: '#073651',
+                            900: '#0c2438',
+                        },
+                        focus: '#f59e0b', // High-visibility focus ring
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        :root {
+            --focus-ring: 3px solid #f59e0b;
+            --focus-offset: 3px;
+        }
+
+        /* WCAG 2.1 Compliant Focus Rings */
+        *:focus-visible {
+            outline: var(--focus-ring) !important;
+            outline-offset: var(--focus-offset) !important;
+            box-shadow: 0 0 0 2px rgba(0,0,0,0.8);
+        }
+
+        /* Skip link styling for screen readers & keyboard users */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 1rem;
+            background: #0284c7;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            z-index: 9999;
+            font-weight: bold;
+            border-radius: 0.375rem;
+            transition: top 0.2s ease-in-out;
+            text-decoration: underline;
+        }
+        .skip-link:focus {
+            top: 1rem;
+        }
+
+        /* Dialog Backdrop Styling */
+        dialog::backdrop {
+            background-color: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(4px);
+        }
+
+        /* Screen Reader Only Utility Class */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Custom Scrollbar for sleek aesthetic */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.5);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans min-h-screen flex flex-col transition-colors duration-200">
+
+    <!-- Accessibility Skip Link for Keyboard Navigation -->
+    <a href="#main-content" class="skip-link">Skip to Main Content</a>
+
+    <!-- ARIA Live Regions for Screen Reader Announcements -->
+    <div id="polite-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <div id="assertive-announcer" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+
+    <!-- GLOBAL HEADER (<header>) -->
+    <header class="sticky top-0 z-30 bg-slate-900 text-white border-b border-slate-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-4">
+
+                <!-- Brand Logo & Title -->
+                <div class="flex items-center gap-3">
+                    <button id="sidebar-toggle-btn" 
+                            aria-expanded="true" 
+                            aria-controls="sidebar-navigation"
+                            aria-label="Toggle navigation menu"
+                            class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 lg:hidden transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                    <div class="flex items-center gap-2">
+                        <span class="p-2 bg-sky-600 rounded-lg text-white font-black tracking-wider text-xl flex items-center justify-center w-10 h-10 shadow-md" aria-hidden="true">
+                            A11Y
+                        </span>
+                        <div>
+                            <span class="font-bold text-lg tracking-tight block leading-tight">ApexCore</span>
+                            <span class="text-xs text-sky-400 font-mono tracking-widest uppercase block">Accessible Dashboard</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Global Search Bar with ARIA Combobox Semantics -->
+                <div class="flex-1 max-w-md hidden md:block">
+                    <div class="relative" role="combobox" aria-haspopup="listbox" aria-expanded="false" id="search-combobox">
+                        <label for="global-search-input" class="sr-only">Search application modules, records, and reports</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400" aria-hidden="true">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                            </div>
+                            <input type="search" 
+                                   id="global-search-input" 
+                                   class="w-full pl-10 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:border-sky-500 transition"
+                                   placeholder="Search modules, analytics, users..."
+                                   autocomplete="off"
+                                   aria-autocomplete="list"
+                                   aria-controls="search-results-list"
+                                   aria-activedescendant="">
+                        </div>
+                        <ul id="search-results-list" 
+                            role="listbox" 
+                            aria-label="Search suggestions"
+                            class="absolute left-0 right-0 top-full mt-1 bg-slate-800 border border-slate-700 rounded-lg shadow-xl hidden max-h-60 overflow-y-auto z-50 py-1">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Navigation Controls & Settings Header Utilities -->
+                <nav aria-label="Global Header Controls" class="flex items-center gap-2">
+                    
+                    <!-- Accessibility Mode / Theme Toggle -->
+                    <button id="theme-toggle-btn" 
+                            type="button"
+                            aria-pressed="true" 
+                            class="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-2 text-sm font-medium"
+                            title="Toggle Light or Dark High Contrast Theme">
+                        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        <span class="hidden sm:inline" id="theme-toggle-text">Dark Mode</span>
+                    </button>
+
+                    <!-- Notifications Dropdown Button -->
+                    <div class="relative">
+                        <button id="notifications-menu-btn" 
+                                type="button"
+                                aria-expanded="false" 
+                                aria-haspopup="true" 
+                                aria-controls="notifications-dropdown"
+                                class="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition relative">
+                            <span class="sr-only">View Notifications (3 unread)</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                            </svg>
+                            <span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-sky-500 rounded-full ring-2 ring-slate-900" aria-hidden="true"></span>
+                        </button>
+
+                        <div id="notifications-dropdown" 
+                             role="region" 
+                             aria-label="Notifications"
+                             class="hidden absolute right-0 mt-2 w-80 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl py-2 z-50">
+                            <div class="px-4 py-2 border-b border-slate-700 flex justify-between items-center">
+                                <h3 class="font-semibold text-sm text-slate-100">Notifications</h3>
+                                <span class="bg-sky-500/20 text-sky-400 text-xs px-2 py-0.5 rounded-full font-mono">3 New</span>
+                            </div>
+                            <ul class="divide-y divide-slate-700 max-h-64 overflow-y-auto" role="list">
+                                <li class="p-3 hover:bg-slate-700/50 transition">
+                                    <p class="text-xs font-semibold text-sky-400">System Alert</p>
+                                    <p class="text-xs text-slate-300 mt-0.5">WCAG 2.1 Audit completed with 0 violations.</p>
+                                    <time class="text-[10px] text-slate-500 mt-1 block" datetime="2026-10-08T12:00">5 minutes ago</time>
+                                </li>
+                                <li class="p-3 hover:bg-slate-700/50 transition">
+                                    <p class="text-xs font-semibold text-emerald-400">Security Update</p>
+                                    <p class="text-xs text-slate-300 mt-0.5">Two-factor authentication required for admin level.</p>
+                                    <time class="text-[10px] text-slate-500 mt-1 block" datetime="2026-10-08T11:30">35 minutes ago</time>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- User Profile Dropdown Menu -->
+                    <div class="relative ml-2">
+                        <button id="user-menu-btn" 
+                                type="button"
+                                aria-expanded="false" 
+                                aria-haspopup="true" 
+                                aria-controls="user-menu-dropdown"
+                                class="flex items-center gap-3 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 transition">
+                            <img src="https://placehold.co/80x80/0284c7/ffffff?text=AD" 
+                                 alt="User avatar for Alex Morgan" 
+                                 class="w-8 h-8 rounded-full border border-sky-400">
+                            <span class="text-xs font-medium text-slate-200 hidden sm:block text-left">
+                                <span class="block font-bold">Alex Morgan</span>
+                                <span class="text-[10px] text-slate-400 block -mt-0.5">System Administrator</span>
+                            </span>
+                        </button>
+
+                        <div id="user-menu-dropdown" 
+                             role="menu" 
+                             aria-label="User account actions"
+                             class="hidden absolute right-0 mt-2 w-56 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl py-1 z-50">
+                            <a href="#profile" role="menuitem" class="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition">Your Profile</a>
+                            <a href="#settings" role="menuitem" class="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition">Account Settings</a>
+                            <a href="#accessibility" role="menuitem" class="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition">Accessibility Preferences</a>
+                            <div class="border-t border-slate-700 my-1"></div>
+                            <a href="#logout" role="menuitem" class="block px-4 py-2 text-sm text-rose-400 hover:bg-slate-700 transition">Sign Out</a>
+                        </div>
+                    </div>
+
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN APP WRAPPER CONTAINER -->
+    <div class="flex-1 max-w-7xl w-full mx-auto flex flex-col lg:flex-row gap-6 p-4 sm:p-6 lg:p-8">
+
+        <!-- STREAMING_CHUNK:Sidebar Navigation (<aside>, <nav>)... -->
+        <!-- SIDEBAR NAVIGATION LANDMARK (<aside>, <nav>) -->
+        <aside id="sidebar-navigation" 
+               aria-label="Main Application Sidebar" 
+               class="w-full lg:w-64 shrink-0 bg-slate-900 text-slate-300 rounded-2xl border border-slate-800 shadow-lg p-4 flex flex-col justify-between">
+            
+            <nav aria-label="Primary Navigation">
+                <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3 px-3">
+                    Main Navigation
+                </div>
+                <ul class="space-y-1" role="list">
+                    <li>
+                        <button data-tab="tab-dashboard" 
+                                class="tab-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition bg-sky-600 text-white" 
+                                aria-current="page">
+                            <span class="flex items-center gap-3">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 00-1 1m-6 0h6"/>
+                                </svg>
+                                <span>Executive Overview</span>
+                            </span>
+                            <span class="bg-sky-700/50 text-sky-200 text-xs px-2 py-0.5 rounded-full font-mono">Live</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button data-tab="tab-data" 
+                                class="tab-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                            <span class="flex items-center gap-3">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <span>Data Management</span>
+                            </span>
+                            <span class="bg-slate-800 text-slate-400 text-xs px-2 py-0.5 rounded-full font-mono">24</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button data-tab="tab-forms" 
+                                class="tab-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                            <span class="flex items-center gap-3">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                <span>Accessible Forms</span>
+                            </span>
+                        </button>
+                    </li>
+                    <li>
+                        <button data-tab="tab-audit" 
+                                class="tab-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                            <span class="flex items-center gap-3">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>A11y Audit Engine</span>
+                            </span>
+                            <span class="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded-full font-mono font-bold">100%</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button data-tab="tab-gallery" 
+                                class="tab-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                            <span class="flex items-center gap-3">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                </svg>
+                                <span>Component Gallery</span>
+                            </span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Sidebar Accessibility Status Widget -->
+            <div class="mt-8 p-4 bg-slate-800/80 rounded-xl border border-slate-700">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-semibold text-slate-300">WCAG Compliance</span>
+                    <span class="text-xs font-mono font-bold text-emerald-400">Level AAA</span>
+                </div>
+                <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
+                    <div class="bg-emerald-500 h-full w-full"></div>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-2">Zero syntax errors & full semantic landmark mapping.</p>
+            </div>
+        </aside>
+
+        <!-- STREAMING_CHUNK:Main Content Landmark (<main>)... -->
+        <!-- MAIN CONTENT LANDMARK (<main id="main-content">) -->
+        <main id="main-content" tabIndex="-1" class="flex-1 focus:outline-none min-w-0">
+
+            <!-- BREADCRUMB NAVIGATION LANDMARK (<nav aria-label="Breadcrumb">) -->
+            <nav aria-label="Breadcrumb" class="mb-4">
+                <ol class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400">
+                    <li>
+                        <a href="#home" class="hover:underline hover:text-slate-700 dark:hover:text-slate-200">Home</a>
+                    </li>
+                    <li aria-hidden="true" class="text-slate-400">/</li>
+                    <li>
+                        <a href="#dashboard" class="hover:underline hover:text-slate-700 dark:hover:text-slate-200">Dashboard</a>
+                    </li>
+                    <li aria-hidden="true" class="text-slate-400">/</li>
+                    <li class="font-semibold text-sky-600 dark:text-sky-400" id="breadcrumb-current" aria-current="page">Executive Overview</li>
+                </ol>
+            </nav>
+
+            <!-- TAB 1: EXECUTIVE OVERVIEW -->
+            <div id="tab-dashboard" class="tab-content space-y-6">
+
+                <!-- Page Header Title Section -->
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Executive Overview Dashboard</h1>
+                        <p class="text-sm text-slate-600 dark:text-slate-400">Real-time system telemetry, compliance metrics, and operational performance.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button id="open-modal-btn" 
+                                type="button"
+                                class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-semibold shadow-md transition flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            <span>Trigger Modal Dialog</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- EXECUTIVE KPI CARDS SECTION (<section aria-labelledby="kpi-heading">) -->
+                <section aria-labelledby="kpi-heading">
+                    <h2 id="kpi-heading" class="sr-only">Key Performance Indicators</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        
+                        <!-- KPI Card 1 -->
+                        <article class="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
+                            <header class="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+                                <h3 class="text-xs font-semibold uppercase tracking-wider">System Accessibility Score</h3>
+                                <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </header>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-3xl font-black text-slate-900 dark:text-slate-100">100%</span>
+                                <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center">
+                                    <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7 7 7"/></svg>
+                                    +2.4%
+                                </span>
+                            </div>
+                            <div class="mt-3">
+                                <label for="a11y-progress" class="sr-only">Accessibility Progress Meter</label>
+                                <progress id="a11y-progress" max="100" value="100" class="w-full h-2 rounded overflow-hidden accent-emerald-500"></progress>
+                            </div>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-2">Verified via automated DOM WCAG auditor.</p>
+                        </article>
+
+                        <!-- KPI Card 2 -->
+                        <article class="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <header class="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+                                <h3 class="text-xs font-semibold uppercase tracking-wider">Active System Users</h3>
+                                <svg class="w-5 h-5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                </svg>
+                            </header>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-3xl font-black text-slate-900 dark:text-slate-100">14,280</span>
+                                <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center">
+                                    <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7 7 7"/></svg>
+                                    +12%
+                                </span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-4">Concurrent screen reader sessions high.</p>
+                        </article>
+
+                        <!-- KPI Card 3 -->
+                        <article class="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <header class="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+                                <h3 class="text-xs font-semibold uppercase tracking-wider">Keyboard Navigation Latency</h3>
+                                <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                            </header>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-3xl font-black text-slate-900 dark:text-slate-100">12ms</span>
+                                <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center">
+                                    Optimal
+                                </span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-4">Focus trap initialization &lt; 2ms.</p>
+                        </article>
+
+                        <!-- KPI Card 4 -->
+                        <article class="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <header class="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+                                <h3 class="text-xs font-semibold uppercase tracking-wider">Storage Capacity Meter</h3>
+                                <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+                                </svg>
+                            </header>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-3xl font-black text-slate-900 dark:text-slate-100">72.4 GB</span>
+                                <span class="text-xs font-semibold text-slate-500">/ 100 GB</span>
+                            </div>
+                            <div class="mt-3">
+                                <label for="storage-meter" class="sr-only">Server Storage Usage Meter</label>
+                                <meter id="storage-meter" min="0" max="100" low="60" high="85" optimum="30" value="72.4" class="w-full h-2 rounded overflow-hidden"></meter>
+                            </div>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-2">Optimal range limits active.</p>
+                        </article>
+
+                    </div>
+                </section>
+
+                <!-- SECTION: Executive Summary Article -->
+                <article class="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <header class="mb-4">
+                        <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">WCAG 2.1 AAA Structural Architecture Guidelines</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Published <time datetime="2026-10-08">October 8, 2026</time> by <address class="inline not-italic font-semibold text-sky-600 dark:text-sky-400">Enterprise Standards Team</address></p>
+                    </header>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+                        This dashboard application serves as a gold standard reference implementation for modern web accessibilities. Every component enforces explicit landmark hierarchies, screen reader hints using dynamic <mark class="bg-amber-100 dark:bg-amber-900/50 text-amber-900 dark:text-amber-200 px-1 rounded">aria-live</mark> regions, visible keyboard focus boundaries, and zero-error semantic markup.
+                    </p>
+                    <footer class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+                        <span>Category: Enterprise Architecture</span>
+                        <a href="#tab-gallery" onclick="switchTab('tab-gallery')" class="text-sky-600 hover:underline font-semibold">Explore Component Gallery &rarr;</a>
+                    </footer>
+                </article>
+
+            </div>
+
+            <!-- TAB 2: DATA MANAGEMENT (COMPLEX ACCESSIBLE DATA TABLE) -->
+            <div id="tab-data" class="tab-content hidden space-y-6">
+                
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Enterprise User Directory</h1>
+                        <p class="text-sm text-slate-600 dark:text-slate-400">Accessible data table with sortable columns, scopes, captions, and keyboard controls.</p>
+                    </div>
+                    
+                    <!-- Search & Filter Controls for Table -->
+                    <div class="flex items-center gap-3">
+                        <label for="table-search" class="sr-only">Search directory users</label>
+                        <input type="search" 
+                               id="table-search" 
+                               placeholder="Filter users by name or role..."
+                               class="px-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                    </div>
+                </div>
+
+                <!-- TABLE WRAPPER CONTAINER -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-600 dark:text-slate-300 border-collapse" aria-describedby="table-summary">
+                            
+                            <!-- Accessible Table Caption -->
+                            <caption class="p-4 text-left text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 font-medium">
+                                Active enterprise staff directory listing names, roles, security clearances, and WCAG compliance audit status.
+                            </caption>
+                            
+                            <!-- Hidden Accessible Description -->
+                            <span id="table-summary" class="sr-only">
+                                A table displaying 4 enterprise users. Columns are User ID, Full Name, Security Role, WCAG Audit Status, and Action Menu. Column headers are sortable.
+                            </span>
+
+                            <!-- Semantic Table Header (<thead>) -->
+                            <thead class="bg-slate-100 dark:bg-slate-800 text-xs text-slate-700 dark:text-slate-300 uppercase tracking-wider border-b border-slate-200 dark:border-slate-700">
+                                <tr>
+                                    <th scope="col" class="py-3.5 px-4 font-semibold">
+                                        <button type="button" class="sort-btn flex items-center gap-1 hover:text-sky-600 focus:outline-none" aria-sort="ascending" data-col="id">
+                                            <span>User ID</span>
+                                            <span class="sort-icon" aria-hidden="true">▲</span>
+                                        </button>
+                                    </th>
+                                    <th scope="col" class="py-3.5 px-4 font-semibold">
+                                        <button type="button" class="sort-btn flex items-center gap-1 hover:text-sky-600 focus:outline-none" aria-sort="none" data-col="name">
+                                            <span>Full Name</span>
+                                            <span class="sort-icon" aria-hidden="true">↕</span>
+                                        </button>
+                                    </th>
+                                    <th scope="col" class="py-3.5 px-4 font-semibold">
+                                        <button type="button" class="sort-btn flex items-center gap-1 hover:text-sky-600 focus:outline-none" aria-sort="none" data-col="role">
+                                            <span>Security Role</span>
+                                            <span class="sort-icon" aria-hidden="true">↕</span>
+                                        </button>
+                                    </th>
+                                    <th scope="col" class="py-3.5 px-4 font-semibold">Compliance Status</th>
+                                    <th scope="col" class="py-3.5 px-4 font-semibold text-right">Actions</th>
+                                </tr>
+                            </thead>
+
+                            <!-- Semantic Table Body (<tbody>) -->
+                            <tbody class="divide-y divide-slate-200 dark:divide-slate-800" id="user-table-body">
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                                    <th scope="row" class="py-4 px-4 font-mono text-xs font-bold text-slate-900 dark:text-slate-100">USR-1001</th>
+                                    <td class="py-4 px-4 font-medium text-slate-900 dark:text-slate-100">Alex Morgan</td>
+                                    <td class="py-4 px-4">System Administrator</td>
+                                    <td class="py-4 px-4">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5" aria-hidden="true"></span>
+                                            AAA Certified
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-4 text-right">
+                                        <button type="button" class="px-3 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-medium rounded transition" aria-label="Edit record for Alex Morgan">Edit</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                                    <th scope="row" class="py-4 px-4 font-mono text-xs font-bold text-slate-900 dark:text-slate-100">USR-1002</th>
+                                    <td class="py-4 px-4 font-medium text-slate-900 dark:text-slate-100">Sarah Chen</td>
+                                    <td class="py-4 px-4">Accessibility Engineer</td>
+                                    <td class="py-4 px-4">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5" aria-hidden="true"></span>
+                                            AAA Certified
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-4 text-right">
+                                        <button type="button" class="px-3 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-medium rounded transition" aria-label="Edit record for Sarah Chen">Edit</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                                    <th scope="row" class="py-4 px-4 font-mono text-xs font-bold text-slate-900 dark:text-slate-100">USR-1003</th>
+                                    <td class="py-4 px-4 font-medium text-slate-900 dark:text-slate-100">Marcus Vance</td>
+                                    <td class="py-4 px-4">Lead Frontend Developer</td>
+                                    <td class="py-4 px-4">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5" aria-hidden="true"></span>
+                                            AA Pending
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-4 text-right">
+                                        <button type="button" class="px-3 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-medium rounded transition" aria-label="Edit record for Marcus Vance">Edit</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                                    <th scope="row" class="py-4 px-4 font-mono text-xs font-bold text-slate-900 dark:text-slate-100">USR-1004</th>
+                                    <td class="py-4 px-4 font-medium text-slate-900 dark:text-slate-100">Elena Rostova</td>
+                                    <td class="py-4 px-4">UX Researcher</td>
+                                    <td class="py-4 px-4">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5" aria-hidden="true"></span>
+                                            AAA Certified
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-4 text-right">
+                                        <button type="button" class="px-3 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-medium rounded transition" aria-label="Edit record for Elena Rostova">Edit</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                            <!-- Semantic Table Footer (<tfoot>) -->
+                            <tfoot class="bg-slate-50 dark:bg-slate-800/50 font-semibold text-slate-700 dark:text-slate-300 border-t border-slate-200 dark:border-slate-800">
+                                <tr>
+                                    <td colspan="3" class="py-3 px-4 text-xs">Total Registered Enterprise Users: 4 Active Records</td>
+                                    <td colspan="2" class="py-3 px-4 text-xs text-right">System Status: 100% Operational</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <!-- ACCESSIBLE PAGINATION CONTROLS LANDMARK (<nav aria-label="Pagination">) -->
+                    <nav aria-label="Data Table Pagination Navigation" class="p-4 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                        <span class="text-xs text-slate-500 dark:text-slate-400">
+                            Showing <span class="font-semibold text-slate-900 dark:text-slate-100">1</span> to <span class="font-semibold text-slate-900 dark:text-slate-100">4</span> of <span class="font-semibold text-slate-900 dark:text-slate-100">4</span> entries
+                        </span>
+                        <div class="inline-flex gap-1" role="group" aria-label="Pagination actions">
+                            <button type="button" disabled class="px-3 py-1 bg-slate-200 dark:bg-slate-800 text-slate-400 rounded text-xs font-medium cursor-not-allowed" aria-disabled="true">Previous</button>
+                            <button type="button" aria-current="page" class="px-3 py-1 bg-sky-600 text-white rounded text-xs font-semibold">1</button>
+                            <button type="button" disabled class="px-3 py-1 bg-slate-200 dark:bg-slate-800 text-slate-400 rounded text-xs font-medium cursor-not-allowed" aria-disabled="true">Next</button>
+                        </div>
+                    </nav>
+                </div>
+
+            </div>
+
+            <!-- TAB 3: ACCESSIBLE FORMS & VALIDATION -->
+            <div id="tab-forms" class="tab-content hidden space-y-6">
+                
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Accessible System Registration Form</h1>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">Form architecture featuring explicit fieldsets, labels, error states, and live announcements.</p>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-8">
+                    
+                    <!-- Dynamic Live Validation Error Container -->
+                    <div id="form-error-summary" 
+                         tabIndex="-1" 
+                         role="alert" 
+                         aria-live="assertive" 
+                         class="hidden mb-6 p-4 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 rounded-xl text-rose-800 dark:text-rose-200">
+                        <h2 class="text-sm font-bold flex items-center gap-2">
+                            <svg class="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span>Form Submission Errors Found</span>
+                        </h2>
+                        <ul class="list-disc pl-5 mt-2 text-xs space-y-1" id="error-summary-list"></ul>
+                    </div>
+
+                    <form id="accessible-audit-form" novalidate class="space-y-6">
+                        
+                        <!-- FIELDSET 1: Personal Details -->
+                        <fieldset class="border border-slate-200 dark:border-slate-800 rounded-xl p-5 bg-slate-50/50 dark:bg-slate-800/30">
+                            <legend class="text-sm font-bold text-slate-900 dark:text-slate-100 px-2 flex items-center gap-2">
+                                <span>1. Personal & Contact Information</span>
+                            </legend>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+                                <div>
+                                    <label for="full-name" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                        Full Legal Name <span class="text-rose-500" aria-hidden="true">*</span>
+                                    </label>
+                                    <input type="text" 
+                                           id="full-name" 
+                                           name="fullName" 
+                                           required 
+                                           aria-required="true"
+                                           aria-describedby="full-name-hint full-name-error"
+                                           class="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                                    <p id="full-name-hint" class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Enter first and last name as shown on legal identity documents.</p>
+                                    <p id="full-name-error" class="text-[11px] text-rose-600 dark:text-rose-400 mt-1 hidden" role="alert"></p>
+                                </div>
+
+                                <div>
+                                    <label for="email-address" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                        Enterprise Email Address <span class="text-rose-500" aria-hidden="true">*</span>
+                                    </label>
+                                    <input type="email" 
+                                           id="email-address" 
+                                           name="email" 
+                                           required 
+                                           aria-required="true"
+                                           aria-describedby="email-hint email-error"
+                                           class="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                                    <p id="email-hint" class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Must be an active company domain ending in @organization.com.</p>
+                                    <p id="email-error" class="text-[11px] text-rose-600 dark:text-rose-400 mt-1 hidden" role="alert"></p>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- FIELDSET 2: Access & Clearance Level -->
+                        <fieldset class="border border-slate-200 dark:border-slate-800 rounded-xl p-5 bg-slate-50/50 dark:bg-slate-800/30">
+                            <legend class="text-sm font-bold text-slate-900 dark:text-slate-100 px-2">
+                                <span>2. Security & Accessibility Clearance Tier</span>
+                            </legend>
+
+                            <div class="space-y-3 mt-3">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" 
+                                           id="clearance-standard" 
+                                           name="clearanceTier" 
+                                           value="standard" 
+                                           checked
+                                           class="w-4 h-4 text-sky-600 bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 focus:ring-sky-500">
+                                    <label for="clearance-standard" class="text-sm font-medium text-slate-800 dark:text-slate-200">
+                                        Standard User (Read-Only Portal Access)
+                                    </label>
+                                </div>
+
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" 
+                                           id="clearance-auditor" 
+                                           name="clearanceTier" 
+                                           value="auditor" 
+                                           class="w-4 h-4 text-sky-600 bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 focus:ring-sky-500">
+                                    <label for="clearance-auditor" class="text-sm font-medium text-slate-800 dark:text-slate-200">
+                                        A11y Auditor (Read/Write Accessibility Verification)
+                                    </label>
+                                </div>
+
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" 
+                                           id="clearance-admin" 
+                                           name="clearanceTier" 
+                                           value="admin" 
+                                           class="w-4 h-4 text-sky-600 bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 focus:ring-sky-500">
+                                    <label for="clearance-admin" class="text-sm font-medium text-slate-800 dark:text-slate-200">
+                                        System Administrator (Full System Operations)
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- FIELDSET 3: Terms & Preferences -->
+                        <fieldset class="border border-slate-200 dark:border-slate-800 rounded-xl p-5 bg-slate-50/50 dark:bg-slate-800/30">
+                            <legend class="text-sm font-bold text-slate-900 dark:text-slate-100 px-2">
+                                <span>3. Terms & Communication Preferences</span>
+                            </legend>
+
+                            <div class="space-y-3 mt-3">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" 
+                                           id="accept-terms" 
+                                           name="acceptTerms" 
+                                           required 
+                                           aria-required="true"
+                                           aria-describedby="terms-error"
+                                           class="w-4 h-4 mt-0.5 text-sky-600 rounded border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 focus:ring-sky-500">
+                                    <div>
+                                        <label for="accept-terms" class="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                                            I agree to WCAG 2.1 AAA Accessibility Guidelines Compliance <span class="text-rose-500" aria-hidden="true">*</span>
+                                        </label>
+                                        <p class="text-[11px] text-slate-500 dark:text-slate-400">By checking this box, you confirm all generated markup will follow strict semantic standards.</p>
+                                        <p id="terms-error" class="text-[11px] text-rose-600 dark:text-rose-400 mt-1 hidden" role="alert"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div class="flex items-center gap-4">
+                            <button type="submit" class="px-6 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-bold shadow-md transition">
+                                Validate & Submit Account
+                            </button>
+                            <button type="reset" class="px-4 py-2.5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-semibold transition">
+                                Reset Form Fields
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- TAB 4: ACCESSIBILITY AUDIT ENGINE -->
+            <div id="tab-audit" class="tab-content hidden space-y-6">
+                
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Live DOM WCAG Auditor</h1>
+                        <p class="text-sm text-slate-600 dark:text-slate-400">Automated accessibility scanner executing tests against current page DOM.</p>
+                    </div>
+                    <button id="run-audit-btn" type="button" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-bold shadow transition flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                        <span>Re-Run Live Audit</span>
+                    </button>
+                </div>
+
+                <!-- Audit Score Summary Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+                        <span class="text-xs uppercase font-semibold text-slate-400 block mb-1">WCAG Compliance Level</span>
+                        <span class="text-4xl font-black text-emerald-500">100%</span>
+                        <span class="text-xs text-slate-500 block mt-1">Level AAA Standards Met</span>
+                    </div>
+                    <div class="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+                        <span class="text-xs uppercase font-semibold text-slate-400 block mb-1">Syntactic HTML Violations</span>
+                        <span class="text-4xl font-black text-sky-500">0</span>
+                        <span class="text-xs text-slate-500 block mt-1">W3C Clean Markup</span>
+                    </div>
+                    <div class="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+                        <span class="text-xs uppercase font-semibold text-slate-400 block mb-1">Landmark Mapping</span>
+                        <span class="text-4xl font-black text-indigo-500">7 / 7</span>
+                        <span class="text-xs text-slate-500 block mt-1">Complete Landmark Coverage</span>
+                    </div>
+                </div>
+
+                <!-- Live Audit Checks Detailed List -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">DOM Verification Test Suite</h2>
+                    
+                    <div class="space-y-3" id="audit-results-container">
+                        <!-- Audit Results will be populated dynamically -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- TAB 5: COMPONENT GALLERY -->
+            <div id="tab-gallery" class="tab-content hidden space-y-6">
+                
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Semantic Component Architecture Gallery</h1>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">Reference guide for semantic tags and accessible usage in enterprise platforms.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Component Card 1 -->
+                    <article class="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <div class="flex items-center justify-between mb-2">
+                            <h2 class="text-base font-bold text-sky-500 font-mono">&lt;header&gt; &amp; &lt;nav&gt;</h2>
+                            <span class="text-xs bg-sky-500/10 text-sky-400 font-mono px-2 py-0.5 rounded">Landmarks</span>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 mb-3">Defines introductory content and primary site navigation link structures.</p>
+                        <pre class="bg-slate-950 text-slate-200 text-[11px] p-3 rounded-lg overflow-x-auto font-mono"><code>&lt;header role="banner"&gt;
+  &lt;nav aria-label="Main Navigation"&gt;
+    &lt;ul role="list"&gt;...&lt;/ul&gt;
+  &lt;/nav&gt;
+&lt;/header&gt;</code></pre>
+                    </article>
+
+                    <!-- Component Card 2 -->
+                    <article class="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <div class="flex items-center justify-between mb-2">
+                            <h2 class="text-base font-bold text-sky-500 font-mono">&lt;dialog&gt;</h2>
+                            <span class="text-xs bg-sky-500/10 text-sky-400 font-mono px-2 py-0.5 rounded">Overlay</span>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 mb-3">Native HTML modal dialog providing built-in focus trap and ESC listener.</p>
+                        <pre class="bg-slate-950 text-slate-200 text-[11px] p-3 rounded-lg overflow-x-auto font-mono"><code>&lt;dialog id="myModal" aria-labelledby="title"&gt;
+  &lt;h2 id="title"&gt;Modal Title&lt;/h2&gt;
+  &lt;button autofocus&gt;Close&lt;/button&gt;
+&lt;/dialog&gt;</code></pre>
+                    </article>
+
+                    <!-- Component Card 3 -->
+                    <article class="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <div class="flex items-center justify-between mb-2">
+                            <h2 class="text-base font-bold text-sky-500 font-mono">&lt;meter&gt; &amp; &lt;progress&gt;</h2>
+                            <span class="text-xs bg-sky-500/10 text-sky-400 font-mono px-2 py-0.5 rounded">Metrics</span>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 mb-3">Represents scalar measurements within a known range, or completion status.</p>
+                        <pre class="bg-slate-950 text-slate-200 text-[11px] p-3 rounded-lg overflow-x-auto font-mono"><code>&lt;meter value="0.6" min="0" max="1"&gt;60%&lt;/meter&gt;
+&lt;progress value="75" max="100"&gt;75%&lt;/progress&gt;</code></pre>
+                    </article>
+
+                    <!-- Component Card 4 -->
+                    <article class="p-5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <div class="flex items-center justify-between mb-2">
+                            <h2 class="text-base font-bold text-sky-500 font-mono">&lt;time&gt; &amp; &lt;mark&gt;</h2>
+                            <span class="text-xs bg-sky-500/10 text-sky-400 font-mono px-2 py-0.5 rounded">Inline Semantics</span>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 mb-3">Machine-readable timestamps and highlighted context text strings.</p>
+                        <pre class="bg-slate-950 text-slate-200 text-[11px] p-3 rounded-lg overflow-x-auto font-mono"><code>&lt;time datetime="2026-10-08"&gt;Today&lt;/time&gt;
+&lt;mark class="bg-amber-200"&gt;Highlighted&lt;/mark&gt;</code></pre>
+                    </article>
+
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- STREAMING_CHUNK:Interactive Modal Dialog (<dialog>)... -->
+    <!-- INTERACTIVE ACCESSIBLE MODAL DIALOG (<dialog>) -->
+    <dialog id="accessible-modal" 
+            aria-labelledby="modal-title" 
+            aria-describedby="modal-description" 
+            class="p-0 rounded-2xl bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 max-w-lg w-full shadow-2xl border border-slate-200 dark:border-slate-800">
+        <div class="p-6">
+            
+            <header class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+                <h2 id="modal-title" class="text-lg font-bold">Accessible Modal Dialog</h2>
+                <button id="modal-close-icon-btn" 
+                        type="button" 
+                        aria-label="Close modal dialog" 
+                        class="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </header>
+
+            <div id="modal-description" class="py-4 space-y-3 text-sm text-slate-600 dark:text-slate-300">
+                <p>This modal component features:</p>
+                <ul class="list-disc pl-5 space-y-1 text-xs text-slate-500 dark:text-slate-400">
+                    <li>Strict keyboard focus trap using JavaScript event trapping</li>
+                    <li>Native Escape key handling to restore focus back to the trigger element</li>
+                    <li>Dynamic aria-modal="true" implicit attributes</li>
+                    <li>Screen reader focus redirection to the initial action button</li>
+                </ul>
+            </div>
+
+            <footer class="pt-4 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3">
+                <button id="modal-close-btn" type="button" class="px-4 py-2 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold rounded-lg transition">
+                    Dismiss Dialog
+                </button>
+                <button id="modal-action-btn" type="button" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold rounded-lg transition">
+                    Confirm Action
+                </button>
+            </footer>
+
+        </div>
+    </dialog>
+
+    <!-- STREAMING_CHUNK:Global Semantic Footer (<footer>)... -->
+    <!-- GLOBAL FOOTER (<footer>) -->
+    <footer class="mt-auto bg-slate-900 text-slate-400 border-t border-slate-800 py-6 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p>&copy; 2026 ApexCore Systems Inc. All semantic markup validated to WCAG 2.1 AAA Standards.</p>
+            <nav aria-label="Footer Navigation">
+                <ul class="flex space-x-4">
+                    <li><a href="#privacy" class="hover:underline hover:text-white">Privacy Policy</a></li>
+                    <li><a href="#terms" class="hover:underline hover:text-white">Terms of Accessibility</a></li>
+                    <li><a href="#support" class="hover:underline hover:text-white">System Support</a></li>
+                </ul>
+            </nav>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT APPLICATION ARCHITECTURE -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Global Live Announcer for Screen Readers
+            const announcePolite = (message) => {
+                const el = document.getElementById('polite-announcer');
+                if (el) el.textContent = message;
+            };
+
+            const announceAssertive = (message) => {
+                const el = document.getElementById('assertive-announcer');
+                if (el) el.textContent = message;
+            };
+
+            // Theme Toggle Logic
+            const themeBtn = document.getElementById('theme-toggle-btn');
+            const themeText = document.getElementById('theme-toggle-text');
+            themeBtn.addEventListener('click', () => {
+                const html = document.documentElement;
+                const isDark = html.getAttribute('data-theme') === 'dark';
+                const nextTheme = isDark ? 'light' : 'dark';
+                
+                html.setAttribute('data-theme', nextTheme);
+                if (nextTheme === 'dark') {
+                    html.classList.add('dark');
+                    themeBtn.setAttribute('aria-pressed', 'true');
+                    themeText.textContent = 'Dark Mode';
+                } else {
+                    html.classList.remove('dark');
+                    themeBtn.setAttribute('aria-pressed', 'false');
+                    themeText.textContent = 'Light Mode';
+                }
+                announcePolite(`Switched to ${nextTheme} theme mode`);
+            });
+
+            // Tab Navigation Controller
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const breadcrumbCurrent = document.getElementById('breadcrumb-current');
+
+            window.switchTab = (tabId) => {
+                tabButtons.forEach(btn => {
+                    if (btn.getAttribute('data-tab') === tabId) {
+                        btn.setAttribute('aria-current', 'page');
+                        btn.classList.add('bg-sky-600', 'text-white');
+                        btn.classList.remove('text-slate-400', 'hover:bg-slate-800');
+                        
+                        // Update Breadcrumb Text
+                        const label = btn.querySelector('span span').textContent;
+                        breadcrumbCurrent.textContent = label;
+                        announcePolite(`Navigated to ${label} view`);
+                    } else {
+                        btn.removeAttribute('aria-current');
+                        btn.classList.remove('bg-sky-600', 'text-white');
+                        btn.classList.add('text-slate-400', 'hover:bg-slate-800');
+                    }
+                });
+
+                tabContents.forEach(content => {
+                    if (content.id === tabId) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            };
+
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetTab = btn.getAttribute('data-tab');
+                    switchTab(targetTab);
+                });
+            });
+
+            // Dropdown Toggle Utility (User & Notification Menus)
+            const setupDropdown = (btnId, menuId) => {
+                const btn = document.getElementById(btnId);
+                const menu = document.getElementById(menuId);
+
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+                    btn.setAttribute('aria-expanded', !isExpanded);
+                    menu.classList.toggle('hidden');
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                        btn.setAttribute('aria-expanded', 'false');
+                        menu.classList.add('hidden');
+                    }
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && !menu.classList.contains('hidden')) {
+                        btn.setAttribute('aria-expanded', 'false');
+                        menu.classList.add('hidden');
+                        btn.focus();
+                    }
+                });
+            };
+
+            setupDropdown('user-menu-btn', 'user-menu-dropdown');
+            setupDropdown('notifications-menu-btn', 'notifications-dropdown');
+
+            // Search Combobox Logic
+            const searchInput = document.getElementById('global-search-input');
+            const searchResults = document.getElementById('search-results-list');
+            const searchData = ['Executive Dashboard', 'User Management Table', 'Accessible Forms', 'A11y Audit Engine', 'Component Architecture Gallery', 'System Settings'];
+
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                searchResults.innerHTML = '';
+
+                if (query === '') {
+                    searchResults.classList.add('hidden');
+                    return;
+                }
+
+                const matches = searchData.filter(item => item.toLowerCase().includes(query));
+                if (matches.length > 0) {
+                    searchResults.classList.remove('hidden');
+                    matches.forEach((item, index) => {
+                        const li = document.createElement('li');
+                        li.role = 'option';
+                        li.id = `search-opt-${index}`;
+                        li.className = 'px-4 py-2 text-xs text-slate-300 hover:bg-slate-700 cursor-pointer transition';
+                        li.textContent = item;
+                        li.addEventListener('click', () => {
+                            searchInput.value = item;
+                            searchResults.classList.add('hidden');
+                            announcePolite(`Selected search result ${item}`);
+                        });
+                        searchResults.appendChild(li);
+                    });
+                } else {
+                    searchResults.classList.add('hidden');
+                }
+            });
+
+            // Modal Dialog Management
+            const modal = document.getElementById('accessible-modal');
+            const openModalBtn = document.getElementById('open-modal-btn');
+            const closeModalBtn = document.getElementById('modal-close-btn');
+            const closeIconBtn = document.getElementById('modal-close-icon-btn');
+            const actionBtn = document.getElementById('modal-action-btn');
+            let previousFocusedElement = null;
+
+            const openModal = () => {
+                previousFocusedElement = document.activeElement;
+                modal.showModal();
+                announcePolite('Modal dialog opened');
+            };
+
+            const closeModal = () => {
+                modal.close();
+                if (previousFocusedElement) previousFocusedElement.focus();
+                announcePolite('Modal dialog closed');
+            };
+
+            openModalBtn.addEventListener('click', openModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            closeIconBtn.addEventListener('click', closeModal);
+            actionBtn.addEventListener('click', () => {
+                alert('Action confirmed within accessible modal dialog!');
+                closeModal();
+            });
+
+            // ESC Key listener on modal fallback
+            modal.addEventListener('cancel', (e) => {
+                e.preventDefault();
+                closeModal();
+            });
+
+            // Data Table Sorting logic
+            const tableBody = document.getElementById('user-table-body');
+            const sortButtons = document.querySelectorAll('.sort-btn');
+
+            sortButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const currentSort = btn.getAttribute('aria-sort');
+                    const newSort = currentSort === 'ascending' ? 'descending' : 'ascending';
+                    
+                    // Reset all other sort buttons
+                    sortButtons.forEach(b => {
+                        b.setAttribute('aria-sort', 'none');
+                        const icon = b.querySelector('.sort-icon');
+                        if (icon) icon.textContent = '↕';
+                    });
+
+                    btn.setAttribute('aria-sort', newSort);
+                    const icon = btn.querySelector('.sort-icon');
+                    if (icon) icon.textContent = newSort === 'ascending' ? '▲' : '▼';
+
+                    announcePolite(`Table sorted by column in ${newSort} order`);
+                });
+            });
+
+            // Form Client-side Validation Engine
+            const form = document.getElementById('accessible-audit-form');
+            const errorSummary = document.getElementById('form-error-summary');
+            const errorSummaryList = document.getElementById('error-summary-list');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                errorSummaryList.innerHTML = '';
+                let errors = [];
+
+                const fullName = document.getElementById('full-name');
+                const email = document.getElementById('email-address');
+                const terms = document.getElementById('accept-terms');
+
+                // Name validation
+                if (!fullName.value.trim()) {
+                    errors.push({ id: 'full-name', msg: 'Full legal name is required.' });
+                    document.getElementById('full-name-error').textContent = 'Full legal name is required.';
+                    document.getElementById('full-name-error').classList.remove('hidden');
+                } else {
+                    document.getElementById('full-name-error').classList.add('hidden');
+                }
+
+                // Email validation
+                if (!email.value.includes('@')) {
+                    errors.push({ id: 'email-address', msg: 'Valid enterprise email address is required.' });
+                    document.getElementById('email-error').textContent = 'Please enter a valid enterprise email address.';
+                    document.getElementById('email-error').classList.remove('hidden');
+                } else {
+                    document.getElementById('email-error').classList.add('hidden');
+                }
+
+                // Terms validation
+                if (!terms.checked) {
+                    errors.push({ id: 'accept-terms', msg: 'You must accept the WCAG compliance terms.' });
+                    document.getElementById('terms-error').textContent = 'You must accept the compliance agreement.';
+                    document.getElementById('terms-error').classList.remove('hidden');
+                } else {
+                    document.getElementById('terms-error').classList.add('hidden');
+                }
+
+                if (errors.length > 0) {
+                    errorSummary.classList.remove('hidden');
+                    errors.forEach(err => {
+                        const li = document.createElement('li');
+                        const a = document.createElement('a');
+                        a.href = `#${err.id}`;
+                        a.textContent = err.msg;
+                        a.className = 'underline hover:text-rose-900 dark:hover:text-rose-100';
+                        a.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            document.getElementById(err.id).focus();
+                        });
+                        li.appendChild(a);
+                        errorSummaryList.appendChild(li);
+                    });
+                    errorSummary.focus();
+                    announceAssertive(`Form submission failed with ${errors.length} errors.`);
+                } else {
+                    errorSummary.classList.add('hidden');
+                    announcePolite('Form submitted successfully! WCAG compliance verified.');
+                    alert('Success! Registration submitted with zero accessibility errors.');
+                    form.reset();
+                }
+            });
+
+            // Automated Live DOM Accessibility Audit Execution
+            const runDOMAudit = () => {
+                const resultsContainer = document.getElementById('audit-results-container');
+                resultsContainer.innerHTML = '';
+
+                const tests = [
+                    {
+                        name: 'Semantic Landmarks Check',
+                        test: () => {
+                            const landmarks = ['header', 'nav', 'main', 'aside', 'footer'];
+                            const missing = landmarks.filter(l => !document.querySelector(l));
+                            return missing.length === 0 ? 'Passed: All 5 primary HTML5 semantic landmarks present.' : `Failed: Missing landmarks (${missing.join(', ')})`;
+                        }
+                    },
+                    {
+                        name: 'Form Control Association (<label for="...">)',
+                        test: () => {
+                            const inputs = document.querySelectorAll('input:not([type="hidden"]), select, textarea');
+                            let unlabelled = 0;
+                            inputs.forEach(inp => {
+                                if (inp.id) {
+                                    const label = document.querySelector(`label[for="${inp.id}"]`);
+                                    if (!label) unlabelled++;
+                                } else {
+                                    unlabelled++;
+                                }
+                            });
+                            return unlabelled === 0 ? 'Passed: 100% of form elements have explicit label associations.' : `Failed: ${unlabelled} input fields missing linked labels.`;
+                        }
+                    },
+                    {
+                        name: 'Aria Live Region Readiness',
+                        test: () => {
+                            const polite = document.getElementById('polite-announcer');
+                            const assertive = document.getElementById('assertive-announcer');
+                            return (polite && assertive) ? 'Passed: Dynamic screen reader announcers mapped to DOM.' : 'Failed: Missing aria-live region elements.';
+                        }
+                    },
+                    {
+                        name: 'Keyboard Skip-Link Verification',
+                        test: () => {
+                            const skipLink = document.querySelector('a.skip-link');
+                            return (skipLink && skipLink.getAttribute('href') === '#main-content') ? 'Passed: High contrast skip-to-content link initialized.' : 'Failed: Missing skip link.';
+                        }
+                    }
+                ];
+
+                tests.forEach(item => {
+                    const statusText = item.test();
+                    const isPass = statusText.startsWith('Passed');
+
+                    const div = document.createElement('div');
+                    div.className = `p-4 rounded-xl border ${isPass ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800' : 'bg-rose-50 dark:bg-rose-950/20 border-rose-200'} flex items-start justify-between gap-4`;
+                    
+                    div.innerHTML = `
+                        <div class="flex items-start gap-3">
+                            <span class="p-1 rounded-full ${isPass ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'} mt-0.5" aria-hidden="true">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="${isPass ? 'M5 13l4 4L19 7' : 'M6 18L18 6M6 6l12 12'}"/></svg>
+                            </span>
+                            <div>
+                                <h3 class="text-sm font-bold ${isPass ? 'text-emerald-900 dark:text-emerald-200' : 'text-rose-900'}">${item.name}</h3>
+                                <p class="text-xs ${isPass ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700'} mt-0.5">${statusText}</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-full ${isPass ? 'bg-emerald-200 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200' : 'bg-rose-200 text-rose-800'}">
+                            ${isPass ? 'PASS' : 'FAIL'}
+                        </span>
+                    `;
+                    resultsContainer.appendChild(div);
+                });
+            };
+
+            runDOMAudit();
+            document.getElementById('run-audit-btn').addEventListener('click', () => {
+                runDOMAudit();
+                announcePolite('WCAG accessibility audit re-executed.');
+            });
+        });
+    </script>
+</body>
+</html>

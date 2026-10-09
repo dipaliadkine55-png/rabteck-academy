@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - Enterprise Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Skip link for keyboard users -->
+  <a href="#mainContent" class="skip-link">Skip to main content</a>
+
+  <header>
+    <h1>Enterprise Dashboard</h1>
+    <nav aria-label="Primary Navigation">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="reports.html">Reports</a></li>
+        <li><a href="settings.html" aria-current="page">Settings</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <aside aria-label="Sidebar Navigation">
+    <nav aria-label="Secondary Navigation">
+      <ul>
+        <li><a href="#profile">Profile Settings</a></li>
+        <li><a href="#preferences">Preferences</a></li>
+        <li><a href="#security">Security</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main id="mainContent">
+    <section id="profile">
+      <h2>Profile Settings</h2>
+      <form aria-labelledby="profileFormHeading">
+        <fieldset>
+          <legend id="profileFormHeading">Update Profile Information</legend>
+
+          <label for="displayName">Display Name:</label>
+          <input type="text" id="displayName" name="displayName" required aria-required="true">
+
+          <label for="email">Email Address:</label>
+          <input type="email" id="email" name="email" required aria-required="true">
+
+          <button type="submit">Save Changes</button>
+        </fieldset>
+      </form>
+    </section>
+
+    <section id="preferences">
+      <h2>Preferences</h2>
+      <form aria-labelledby="preferencesFormHeading">
+        <fieldset>
+          <legend id="preferencesFormHeading">Customize Dashboard</legend>
+
+          <label for="theme">Theme:</label>
+          <select id="theme" name="theme">
+            <option value="light">Light Mode</option>
+            <option value="dark">Dark Mode</option>
+          </select>
+
+          <label for="language">Language:</label>
+          <select id="language" name="language">
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="fr">Marathi</option>
+            <option value="fr">English</option>
+          </select>
+
+          <button type="submit">Apply Preferences</button>
+        </fieldset>
+      </form>
+    </section>
+
+    <section id="security">
+      <h2>Security</h2>
+      <form aria-labelledby="securityFormHeading">
+        <fieldset>
+          <legend id="securityFormHeading">Update Security Settings</legend>
+
+          <label for="password">New Password:</label>
+          <input type="password" id="password" name="password" required aria-required="true">
+
+          <label for="confirmPassword">Confirm Password:</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" required aria-required="true">
+
+          <button type="submit">Update Password</button>
+        </fieldset>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Enterprise Dashboard Inc.</p>
+  </footer>
+
+  <!-- Accessible Modal Dialog -->
+  <div role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDesc" aria-hidden="true">
+    <h2 id="modalTitle">Confirm Settings Change</h2>
+    <p id="modalDesc">Are you sure you want to save these changes?</p>
+    <button type="button">Yes</button>
+    <button type="button">No</button>
+  </div>
+</body>
+</html>

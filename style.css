@@ -1,0 +1,181 @@
+/* style.css */
+
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #f9f9f9;
+  color: #222;
+}
+
+/* Skip link for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  z-index: 100;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* Header */
+header {
+  background: #004080;
+  color: #fff;
+  padding: 1rem;
+}
+header h1 {
+  margin-bottom: 0.5rem;
+}
+header nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+}
+header nav a {
+  color: #fff;
+  text-decoration: none;
+}
+header nav a[aria-current="page"] {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+/* Sidebar */
+aside {
+  background: #e6e6e6;
+  padding: 1rem;
+  width: 200px;
+  float: left;
+}
+aside nav ul {
+  list-style: none;
+}
+}
+aside nav ul {
+  list-style: none;
+}
+aside nav a {
+  display: block;
+  padding: 0.5rem;
+  color: #004080;
+  text-decoration: none;
+}
+aside nav a:hover,
+aside nav a:focus {
+  background: #cce0ff;
+  outline: 2px solid #004080;
+}
+
+/* Main content */
+main {
+  margin-left: 220px;
+  padding: 1rem;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+caption {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+th, td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  text-align: left;
+}
+thead {
+  background: #004080;
+  color: #fff;
+}
+tbody tr:nth-child(even) {
+  background: #f2f2f2;
+}
+
+/* Forms */
+form {
+  margin-bottom: 1rem;
+}
+label {
+  display: block;
+  margin-top: 0.5rem;
+}
+input, textarea, select, button {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+input:focus, textarea:focus, select:focus, button:focus {
+  outline: 3px solid #004080;
+}
+
+/* Buttons */
+button {
+  background: #004080;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+button:hover,
+button:focus {
+  background: #003060;
+}
+
+/* Footer */
+footer {
+  clear: both;
+  background: #004080;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+/* Modal */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border: 2px solid #004080;
+  padding: 1rem;
+  z-index: 200;
+  width: 300px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.modal-header {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+.btn-confirm {
+  background: #007a33;
+  color: #fff;
+}
+.btn-cancel {
+  background: #a00;
+  color: #fff;
+}

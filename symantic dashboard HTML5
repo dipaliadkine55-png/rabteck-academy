@@ -1,0 +1,19 @@
+enterprise-dashboard/
+├── index.html              # Landing page with semantic layout
+├── reports.html            # Example secondary page
+├── settings.html           # Example secondary page
+├── components/             # Reusable accessible components
+│   ├── header.html
+│   ├── sidebar.html
+│   ├── table.html
+│   ├── form.html
+│   └── modal.html
+├── css/
+│   └── styles.css          # Accessible color contrast, focus styles
+├── docs/
+│   ├── ARCHITECTURE.md     # Repo structure + DOM hierarchy explanation
+│   └── audit/
+│       ├── lighthouse.png  # Accessibility score screenshot
+│       ├── validator.png   # W3C validation proof
+│       └── worksheet.md    # Issues + remediation notes
+└── README.md               # Setup + mentor proof instructions
