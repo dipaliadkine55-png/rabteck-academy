@@ -1,0 +1,26 @@
+import { useEffect, useState } from "react";
+
+function TaskList() {
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    fetch("/mockdata.json")
+      .then((res) => res.json())
+      .then((data) => setTasks(data.tasks));
+  }, []);
+
+  return (
+    <div>
+      <h2 className="text-xl font-bold">Task Dashboard</h2>
+      <ul>
+        {tasks.map((task) => (
+          <li key={task.id} className="p-2 border-b">
+            <strong>{task.title}</strong> - {task.status}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default TaskList;

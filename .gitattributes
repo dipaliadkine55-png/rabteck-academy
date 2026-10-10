@@ -1,2 +1,21 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+# Ensure consistent line endings across OS
+* text=auto eol=lf
+
+# Treat JavaScript/JSX files as text
+*.js   text diff=javascript
+*.jsx  text diff=javascript
+
+# Treat CSS files as text
+*.css  text diff=css
+
+# Treat JSON files as text
+*.json text diff=json
+
+# Handle Markdown files
+*.md   text diff=markdown
+
+# Prevent binary files from being modified
+*.png  binary
+*.jpg  binary
